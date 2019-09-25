@@ -12,8 +12,9 @@ Author: Dr. Xiangnan He (http://www.comp.nus.edu.sg/~xiangnan/)
 
 ## Environment Settings
 We use Keras with Theano as the backend. 
-- Keras version:  '1.0.7'
-- Theano version: '0.8.0'
+- Keras version:  ~~'1.0.7'~~  **=>**  **2.2.5**
+- ~~Theano version: '0.8.0'~~
+- **TensorFlow: '1.14.0'** 
 
 ## Example to run the codes.
 The instruction of commands has been clearly stated in the codes (see the  parse_args function). 
