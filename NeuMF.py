@@ -89,7 +89,7 @@ def get_model(num_users, num_items, mf_dim=10, layers=[10], reg_layers=[0], reg_
                                   input_length=1)
 
     MLP_Embedding_User = Embedding(input_dim=num_users, output_dim=layers[0] // 2, name="mlp_embedding_user",
-                                   embeddings_initializer='random_normal', W_regularizer=l2(reg_layers[0]),
+                                   embeddings_initializer='random_normal', embeddings_regularizer=l2(reg_layers[0]),
                                    input_length=1)
     MLP_Embedding_Item = Embedding(input_dim=num_items, output_dim=layers[0] // 2, name='mlp_embedding_item',
                                    embeddings_initializer='random_normal', embeddings_regularizer=l2(reg_layers[0]),
@@ -124,10 +124,10 @@ def get_model(num_users, num_items, mf_dim=10, layers=[10], reg_layers=[0], reg_
     predict_vector = Concatenate()([mf_vector, mlp_vector])
 
     # Final prediction layer
-    prediction = Dense(1, activation='sigmoid', init='lecun_uniform', name="prediction")(predict_vector)
+    prediction = Dense(1, activation='sigmoid', kernel_initializer='lecun_uniform', name="prediction")(predict_vector)
 
-    model = Model(input=[user_input, item_input],
-                  output=prediction)
+    model = Model(inputs=[user_input, item_input],
+                  outputs=prediction)
 
     return model
 
@@ -170,7 +170,7 @@ def get_train_instances(train, num_negatives):
         # negative instances
         for t in range(num_negatives):
             j = np.random.randint(num_items)
-            while (u, j) in train:
+            while (u, j) in train.keys():
                 j = np.random.randint(num_items)
             user_input.append(u)
             item_input.append(j)
@@ -234,7 +234,7 @@ if __name__ == '__main__':
     if args.out > 0:
         model.save_weights(model_out_file, overwrite=True)
 
-        # Training model
+    # Training model
     for epoch in range(num_epochs):
         t1 = time()
         # Generate training instances
@@ -243,7 +243,7 @@ if __name__ == '__main__':
         # Training
         hist = model.fit([np.array(user_input), np.array(item_input)],  # input
                          np.array(labels),  # labels
-                         batch_size=batch_size, nb_epoch=1, verbose=0, shuffle=True)
+                         batch_size=batch_size, epochs=1, verbose=0, shuffle=True)
         t2 = time()
 
         # Evaluation

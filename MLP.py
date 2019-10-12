@@ -7,7 +7,6 @@ He Xiangnan et al. Neural Collaborative Filtering. In WWW 2017.
 '''
 
 import numpy as np
-
 # import theano
 # import theano.tensor as T
 import keras
@@ -106,8 +105,8 @@ def get_model(num_users, num_items, layers=[20, 10], reg_layers=[0, 0]):
     '''prediction = Dense(1, activation='sigmoid', init='lecun_uniform', name='prediction')(vector)'''
     prediction = Dense(1, activation='sigmoid', kernel_initializer='lecun_uniform', name='prediction')(vector)
 
-    model = Model(input=[user_input, item_input],
-                  output=prediction)
+    model = Model(inputs=[user_input, item_input],
+                  outputs=prediction)
 
     return model
 
@@ -124,7 +123,7 @@ def get_train_instances(train, num_negatives):
         for t in range(num_negatives):
             j = np.random.randint(num_items)
             '''while train.has_key((u, j))'''
-            while (u, j) in train:
+            while (u, j) in train.keys():
                 j = np.random.randint(num_items)
             user_input.append(u)
             item_input.append(j)
